@@ -29,14 +29,14 @@ public class YoutubeDL {
     private static final String pythonLibName = "libpython.zip.so";
     private static final String pythonDirName = "python";
     private static final String ffmpegDirName = "ffmpeg";
-    protected static final String youtubeDLDirName = "youtube-dl";
-    private static final String youtubeDLBin = "__main__.py";
-    protected static final String youtubeDLFile = "youtube_dl.zip";
+    protected static final String ytDLpDirName = "yt-dlp";
+    private static final String ytDLpBin = "__main__.py";
+    protected static final String ytDLpFile = "yt_dlp.zip";
     private static final String pythonLibVersion = "pythonLibVersion";
 
     private boolean initialized = false;
     private File pythonPath;
-    private File youtubeDLPath;
+    private File ytDLpPath;
     private File binDir;
 
     private String ENV_LD_LIBRARY_PATH;
@@ -64,26 +64,26 @@ public class YoutubeDL {
         File pythonDir = new File(packagesDir, pythonDirName);
         File ffmpegDir = new File(packagesDir, ffmpegDirName);
 
-        File youtubeDLDir = new File(baseDir, youtubeDLDirName);
-        youtubeDLPath = new File(youtubeDLDir, youtubeDLBin);
+        File ytDLpDir = new File(baseDir, ytDLpDirName);
+        ytDLpPath = new File(ytDLpDir, ytDLpBin);
 
         ENV_LD_LIBRARY_PATH = pythonDir.getAbsolutePath() + "/usr/lib" + ":" + ffmpegDir.getAbsolutePath() + "/usr/lib";
         ENV_SSL_CERT_FILE = pythonDir.getAbsolutePath() + "/usr/etc/tls/cert.pem";
         ENV_PYTHONHOME = pythonDir.getAbsolutePath() + "/usr";
 
         initPython(appContext, pythonDir);
-        initYoutubeDL(appContext, youtubeDLDir);
+        initYtDLp(appContext, ytDLpDir);
 
         initialized = true;
     }
 
-    protected void initYoutubeDL(Context appContext, File youtubeDLDir) throws YoutubeDLException {
-        if (!youtubeDLDir.exists()) {
-            youtubeDLDir.mkdirs();
+    protected void initYtDLp(Context appContext, File ytDLpDir) throws YoutubeDLException {
+        if (!ytDLpDir.exists()) {
+            ytDLpDir.mkdirs();
             try {
-                ZipUtils.unzip(appContext.getResources().openRawResource(R.raw.youtube_dl), youtubeDLDir);
+                ZipUtils.unzip(appContext.getResources().openRawResource(R.raw.yt_dlp), ytDLpDir);
             } catch (Exception e) {
-                FileUtils.deleteQuietly(youtubeDLDir);
+                FileUtils.deleteQuietly(ytDLpDir);
                 throw new YoutubeDLException("failed to initialize", e);
             }
         }
@@ -163,7 +163,7 @@ public class YoutubeDL {
 
         List<String> args = request.buildCommand();
         List<String> command = new ArrayList<>();
-        command.addAll(Arrays.asList(pythonPath.getAbsolutePath(), youtubeDLPath.getAbsolutePath()));
+        command.addAll(Arrays.asList(pythonPath.getAbsolutePath(), ytDLpPath.getAbsolutePath()));
         command.addAll(args);
 
         ProcessBuilder processBuilder = new ProcessBuilder(command);

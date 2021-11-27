@@ -4,15 +4,16 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class YoutubeDLRequest {
 
-    private List<String> urls;
-    private YoutubeDLOptions options = new YoutubeDLOptions();
+    private final List<String> urls;
+    private final YoutubeDLOptions options = new YoutubeDLOptions();
 
     public YoutubeDLRequest(String url) {
-        this.urls = Arrays.asList(url);
+        this.urls = Collections.singletonList(url);
     }
 
     public YoutubeDLRequest(@NonNull  List<String> urls) {

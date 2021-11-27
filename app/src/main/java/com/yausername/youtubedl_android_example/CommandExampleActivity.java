@@ -41,14 +41,14 @@ public class CommandExampleActivity extends AppCompatActivity implements View.On
     private ProgressBar pbLoading;
 
     private boolean running = false;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    private DownloadProgressCallback callback = new DownloadProgressCallback() {
+    private final DownloadProgressCallback callback = new DownloadProgressCallback() {
         @Override
         public void onProgressUpdate(float progress, long etaInSeconds) {
             runOnUiThread(() -> {
                         progressBar.setProgress((int) progress);
-                        tvCommandStatus.setText(String.valueOf(progress) + "% (ETA " + String.valueOf(etaInSeconds) + " seconds)");
+                        tvCommandStatus.setText(progress + "% (ETA " + etaInSeconds + " seconds)");
                     }
             );
         }
@@ -80,11 +80,8 @@ public class CommandExampleActivity extends AppCompatActivity implements View.On
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_run_command: {
-                runCommand();
-                break;
-            }
+        if (v.getId() == R.id.btn_run_command) {
+            runCommand();
         }
     }
 
@@ -132,7 +129,7 @@ public class CommandExampleActivity extends AppCompatActivity implements View.On
                     Toast.makeText(CommandExampleActivity.this, "command successful", Toast.LENGTH_LONG).show();
                     running = false;
                 }, e -> {
-                    if(BuildConfig.DEBUG) Log.e(TAG,  "command failed", e);
+                    if (BuildConfig.DEBUG) Log.e(TAG, "command failed", e);
                     pbLoading.setVisibility(View.GONE);
                     tvCommandStatus.setText(getString(R.string.command_failed));
                     tvCommandOutput.setText(e.getMessage());

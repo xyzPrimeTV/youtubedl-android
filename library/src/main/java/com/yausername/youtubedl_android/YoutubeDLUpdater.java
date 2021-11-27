@@ -22,28 +22,28 @@ class YoutubeDLUpdater {
     private YoutubeDLUpdater() {
     }
 
-    private static final String releasesUrl = "https://api.github.com/repos/yausername/youtubedl-lazy/releases/latest";
+    private static final String releasesUrl = "https://api.github.com/repos/xibr/ytdlp-lazy/releases/latest";
     private static final String youtubeDLVersionKey = "youtubeDLVersion";
 
     static UpdateStatus update(Context appContext) throws IOException, YoutubeDLException {
         JsonNode json = checkForUpdate(appContext);
-        if(null == json) return UpdateStatus.ALREADY_UP_TO_DATE;
+        if (null == json) return UpdateStatus.ALREADY_UP_TO_DATE;
 
         String downloadUrl = getDownloadUrl(json);
         File file = download(appContext, downloadUrl);
 
-        File youtubeDLDir = null;
+        File ytDLpDir = null;
         try {
-            youtubeDLDir = getYoutubeDLDir(appContext);
+            ytDLpDir = getYtDLpDir(appContext);
             //purge older version
-            FileUtils.deleteDirectory(youtubeDLDir);
+            FileUtils.deleteDirectory(ytDLpDir);
             //install newer version
-            youtubeDLDir.mkdirs();
-            ZipUtils.unzip(file, youtubeDLDir);
+            ytDLpDir.mkdirs();
+            ZipUtils.unzip(file, ytDLpDir);
         } catch (Exception e) {
             //if something went wrong restore default version
-            FileUtils.deleteQuietly(youtubeDLDir);
-            YoutubeDL.getInstance().initYoutubeDL(appContext, youtubeDLDir);
+            FileUtils.deleteQuietly(ytDLpDir);
+            YoutubeDL.getInstance().initYtDLp(appContext, ytDLpDir);
             throw new YoutubeDLException(e);
         } finally {
             file.delete();
@@ -62,22 +62,22 @@ class YoutubeDLUpdater {
         JsonNode json = YoutubeDL.objectMapper.readTree(url);
         String newVersion = getTag(json);
         String oldVersion = SharedPrefsHelper.get(appContext, youtubeDLVersionKey);
-        if(newVersion.equals(oldVersion)){
+        if (newVersion.equals(oldVersion)) {
             return null;
         }
         return json;
     }
 
-    private static String getTag(JsonNode json){
+    private static String getTag(JsonNode json) {
         return json.get("tag_name").asText();
     }
 
     @NonNull
-    private static String getDownloadUrl(@NonNull JsonNode json) throws IOException, YoutubeDLException {
+    private static String getDownloadUrl(@NonNull JsonNode json) throws YoutubeDLException {
         ArrayNode assets = (ArrayNode) json.get("assets");
         String downloadUrl = "";
         for (JsonNode asset : assets) {
-            if (YoutubeDL.youtubeDLFile.equals(asset.get("name").asText())) {
+            if (YoutubeDL.ytDLpFile.equals(asset.get("name").asText())) {
                 downloadUrl = asset.get("browser_download_url").asText();
                 break;
             }
@@ -89,15 +89,15 @@ class YoutubeDLUpdater {
     @NonNull
     private static File download(Context appContext, String url) throws IOException {
         URL downloadUrl = new URL(url);
-        File file = File.createTempFile("youtube_dl", "zip", appContext.getCacheDir());
+        File file = File.createTempFile("yt_dlp", "zip", appContext.getCacheDir());
         FileUtils.copyURLToFile(downloadUrl, file, 5000, 10000);
         return file;
     }
 
     @NonNull
-    private static File getYoutubeDLDir(Context appContext) {
+    private static File getYtDLpDir(Context appContext) {
         File baseDir = new File(appContext.getNoBackupFilesDir(), YoutubeDL.baseName);
-        return new File(baseDir, YoutubeDL.youtubeDLDirName);
+        return new File(baseDir, YoutubeDL.ytDLpDirName);
     }
 
     @Nullable

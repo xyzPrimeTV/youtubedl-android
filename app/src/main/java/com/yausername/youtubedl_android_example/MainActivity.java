@@ -1,5 +1,6 @@
 package com.yausername.youtubedl_android_example;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ProgressBar progressBar;
 
     private boolean updating = false;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
+    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     private static final String TAG = "MainActivity";
 
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         progressBar = findViewById(R.id.progress_bar);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -113,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                     updating = false;
                 }, e -> {
-                    if(BuildConfig.DEBUG) Log.e(TAG, "failed to update", e);
+                    if (BuildConfig.DEBUG) Log.e(TAG, "failed to update", e);
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(MainActivity.this, "update failed", Toast.LENGTH_LONG).show();
                     updating = false;

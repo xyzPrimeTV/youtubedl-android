@@ -10,6 +10,7 @@ import com.yausername.youtubedl_android.YoutubeDLException;
 
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.exceptions.UndeliverableException;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.plugins.RxJavaPlugins;
@@ -31,8 +32,8 @@ public class App extends Application {
             }
 
             @Override
-            public void onError(Throwable e) {
-                if(BuildConfig.DEBUG) Log.e(TAG, "failed to initialize youtubedl-android", e);
+            public void onError(@NonNull Throwable e) {
+                if (BuildConfig.DEBUG) Log.e(TAG, "failed to initialize yt-dlp-android", e);
                 Toast.makeText(getApplicationContext(), "initialization failed: " + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });

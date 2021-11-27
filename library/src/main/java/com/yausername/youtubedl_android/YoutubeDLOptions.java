@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class YoutubeDLOptions {
 
-    private Map<String, String> options = new LinkedHashMap<>();
+    private final Map<String, String> options = new LinkedHashMap<>();
 
     public YoutubeDLOptions addOption(@NonNull String key, @NonNull String value){
         options.put(key, value);
