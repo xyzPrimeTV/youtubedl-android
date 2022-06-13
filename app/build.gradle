@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 29
     defaultConfig {
-        applicationId "com.yausername.youtubedl_android_example"
+        applicationId "com.xyzPrimeTV.youtubedl_android_example"
         minSdkVersion 21
         targetSdkVersion 29
         versionCode project.versionCode
